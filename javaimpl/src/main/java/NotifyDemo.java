@@ -45,7 +45,7 @@ public class NotifyDemo {
         properties.setProperty(KAFKA_TOPIC, "your topic");
         // kafka broker url
         properties.setProperty(KAFKA_BROKER_URL_NAME, "your broker url");
-        // initial checkpoint for first seek
+        // initial checkpoint for first seek(a timestamp to set, eg 1566180200 if you want (Mon Aug 19 10:03:21 CST 2019))
         properties.setProperty(INITIAL_CHECKPOINT_NAME, "start timestamp");
         // if force use config checkpoint when start. for checkpoint reset
         properties.setProperty(USE_CONFIG_CHECKPOINT_NAME, "true");
