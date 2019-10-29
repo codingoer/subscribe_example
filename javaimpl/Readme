@@ -20,7 +20,18 @@
  // initial checkpoint for first seek
  properties.setProperty(INITIAL_CHECKPOINT_NAME, "your first start timestamp");
 
-当前的demo只针对了DStore增量的数据格式做了解析，如果您是同步到kafka，然后订阅的自建kafka，可能存在全量数据，全量类型是INIT，当前demo暂时不支持。
+当前的demo只针对了DStore增量的数据格式做了解析，如果您是同步到kafka，然后订阅的自建kafka，可能存在全量数据，全量类型是INIT，当前demo没有处理全量数据。
+注意，不管是全量数据还是增量数据，对于beforeImage和afterImage中的顺序都没有保证和源端数据库是一致的，用户使用的时候需要对应指定的表，使用指定字段值来获取指定的值
+
+MysqlRecordPrinter 类中实现了如何将record转换成String，用户使用到的话可以将record转换为Map来获取对应的列
+
+class Field {
+    final String name;
+    final String encoding;
+    final Value beforeValue;
+    final Value afterValue;
+}
+类似的结构类保存前后镜像值,demo里面没有做具体实现
 
 程序的流程将读取和消费分离开来。由于consumer不是线程安全的，因此读取单线程操作consumer，包括调用poll函数和commitoffset函数
 etl消费之后调用commit函数
