@@ -16,12 +16,16 @@ import static common.Util.uncompressionObjectName;
 /**
  * this class show how to process record attribute and column
  */
-public class MysqlRecordPrinter {
-    private static final Logger log = LoggerFactory.getLogger(MysqlRecordPrinter.class);
-    private static final FieldConverter FIELD_CONVERTER = FieldConverter.getConverter("mysql", null);
+public class RecordPrinter {
+    private static final Logger log = LoggerFactory.getLogger(RecordPrinter.class);
+    private FieldConverter fieldConverter;
+
+    public RecordPrinter(String dbType) {
+        fieldConverter = FieldConverter.getConverter(dbType, null);
+    }
 
 
-    public static String recordToString(Record record) {
+    public String recordToString(Record record) {
         StringBuilder stringBuilder = new StringBuilder(256);
         switch (record.getOperation()) {
             case DDL: {
@@ -43,7 +47,7 @@ public class MysqlRecordPrinter {
     }
 
 
-    private static FieldEntryHolder[] getFieldEntryHolder(Record record) {
+    private FieldEntryHolder[] getFieldEntryHolder(Record record) {
         // this is a simple impl, may exist unhandled situation
         FieldEntryHolder[] fieldArray = new FieldEntryHolder[2];
 
@@ -53,7 +57,7 @@ public class MysqlRecordPrinter {
         return fieldArray;
     }
 
-    private static void appendFields(List<Field> fields, FieldEntryHolder before, FieldEntryHolder after, StringBuilder stringBuilder) {
+    private void appendFields(List<Field> fields, FieldEntryHolder before, FieldEntryHolder after, StringBuilder stringBuilder) {
         if (null != fields) {
             Iterator<Field> fieldIterator = fields.iterator();
             while (fieldIterator.hasNext() && before.hasNext() && after.hasNext()) {
@@ -67,18 +71,18 @@ public class MysqlRecordPrinter {
 
 
 
-    private static void appendField(Field field, Object beforeImage, Object afterImage, StringBuilder stringBuilder) {
+    private void appendField(Field field, Object beforeImage, Object afterImage, StringBuilder stringBuilder) {
         stringBuilder.append("Field [").append(field.getName()).append("]");
         if (null != beforeImage) {
-            stringBuilder.append("Before [").append(FIELD_CONVERTER.convert(field, beforeImage).toString()).append("]");
+            stringBuilder.append("Before [").append(fieldConverter.convert(field, beforeImage).toString()).append("]");
         }
         if (null != afterImage) {
-            stringBuilder.append("After [").append(FIELD_CONVERTER.convert(field, afterImage).toString()).append("]");
+            stringBuilder.append("After [").append(fieldConverter.convert(field, afterImage).toString()).append("]");
         }
         stringBuilder.append("\n");
     }
 
-    private static void appendRecordGeneralInfo(Record record, StringBuilder stringBuilder) {
+    private void appendRecordGeneralInfo(Record record, StringBuilder stringBuilder) {
         String dbName = null;
         String tableName = null;
         // here we get db and table name

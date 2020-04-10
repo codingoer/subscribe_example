@@ -22,7 +22,7 @@ public class NotifyDemo {
                 // consume record
                 // MysqlRecordPrinter show how to go through record fields and get general attributes
                 String ret = MysqlRecordPrinter.recordToString(record.getRecord());
-        //        log.info(ret);
+                //        log.info(ret);
                 record.commit(String.valueOf(record.getRecord().getSourceTimestamp()));
             }
         };
