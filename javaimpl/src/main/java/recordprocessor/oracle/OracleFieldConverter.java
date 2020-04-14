@@ -223,12 +223,14 @@ public class OracleFieldConverter implements FieldConverter {
 
         public FieldValue getFieldValue(Object data) {
 
-            FieldValue FieldValue = new FieldValue();
+            FieldValue fieldValue = new FieldValue();
             if (null != data) {
                 com.alibaba.dts.formats.avro.DateTime dateTime = (com.alibaba.dts.formats.avro.DateTime) data;
-                FieldValue.setValue(dateTimeToString(dateTime).getBytes(US_ASCII));
+                fieldValue.setValue(dateTimeToString(dateTime).getBytes(US_ASCII));
             }
-            return FieldValue;
+            fieldValue.setEncoding("ASCII");
+
+            return fieldValue;
         }
 
         @Override
@@ -243,7 +245,7 @@ public class OracleFieldConverter implements FieldConverter {
 
         public FieldValue getFieldValue(Object data) {
 
-            FieldValue FieldValue = new FieldValue();
+            FieldValue fieldValue = new FieldValue();
             if (null != data) {
                 com.alibaba.dts.formats.avro.TimestampWithTimeZone timestampWithTimeZone = (com.alibaba.dts.formats.avro.TimestampWithTimeZone) data;
                 com.alibaba.dts.formats.avro.DateTime dateTime = timestampWithTimeZone.getValue();
@@ -261,9 +263,12 @@ public class OracleFieldConverter implements FieldConverter {
                 StringBuilder timestampTimeZoneBuilder = new StringBuilder();
                 timestampTimeZoneBuilder.append(new String(time)).append(' ');
                 timestampTimeZoneBuilder.append(timestampWithTimeZone.getTimezone());
-                FieldValue.setValue(timestampTimeZoneBuilder.toString().getBytes(US_ASCII));
+                fieldValue.setValue(timestampTimeZoneBuilder.toString().getBytes(US_ASCII));
             }
-            return FieldValue;
+
+            fieldValue.setEncoding("ASCII");
+
+            return fieldValue;
         }
 
         @Override
@@ -276,12 +281,15 @@ public class OracleFieldConverter implements FieldConverter {
 
         public FieldValue getFieldValue(Object data) {
 
-            FieldValue FieldValue = new FieldValue();
+            FieldValue fieldValue = new FieldValue();
             if (null != data) {
                 com.alibaba.dts.formats.avro.DateTime dateTime = ((com.alibaba.dts.formats.avro.TimestampWithTimeZone) data).getValue();
-                FieldValue.setValue(dateTimeToString(dateTime).getBytes(US_ASCII));
+                fieldValue.setValue(dateTimeToString(dateTime).getBytes(US_ASCII));
             }
-            return FieldValue;
+
+            fieldValue.setEncoding("ASCII");
+
+            return fieldValue;
         }
     }
 
@@ -290,7 +298,7 @@ public class OracleFieldConverter implements FieldConverter {
         static final int DATETIME = 10;
 
         public FieldValue getFieldValue(Object data) {
-            FieldValue FieldValue = new FieldValue();
+            FieldValue fieldValue = new FieldValue();
             if (null != data) {
                 com.alibaba.dts.formats.avro.DateTime dateTime = (com.alibaba.dts.formats.avro.DateTime) data;
                 byte[] time = null;
@@ -306,9 +314,10 @@ public class OracleFieldConverter implements FieldConverter {
                 encodeDate(dateTime, time, position);
                 time[position + 10] = ' ';
                 encodeTime(dateTime, time, position + DATE_LEN + 1);
-                FieldValue.setValue(new String(time).getBytes(US_ASCII));
+                fieldValue.setValue(time);
             }
-            return FieldValue;
+            fieldValue.setEncoding("ASCII");
+            return fieldValue;
         }
 
         @Override
@@ -359,21 +368,21 @@ public class OracleFieldConverter implements FieldConverter {
     }
 
     static class CharacterAdapter implements DataAdapter {
-
         static final int STRING = 8; //XTypes.STRING
+
 
         public FieldValue getFieldValue(Object data) {
 
-            FieldValue FieldValue = new FieldValue();
+            FieldValue fieldValue = new FieldValue();
             if (null != data) {
                 com.alibaba.dts.formats.avro.Character character = (com.alibaba.dts.formats.avro.Character) data;
-
-                String value = new String(character.getValue().array(), UTF_8);
-                FieldValue.setValue(value.getBytes(US_ASCII));
+                fieldValue.setValue(character.getValue().array());
+                fieldValue.setEncoding(character.getCharset());
+            } else {
+                fieldValue.setEncoding("ASCII");
             }
-            return FieldValue;
+            return fieldValue;
         }
-
         @Override
         public int getRawType() {
             return STRING;
