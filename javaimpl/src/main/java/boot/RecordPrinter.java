@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import recordprocessor.FieldConverter;
+import recordprocessor.FieldValue;
 
 import java.util.Iterator;
 import java.util.List;
@@ -74,10 +75,17 @@ public class RecordPrinter {
     private void appendField(Field field, Object beforeImage, Object afterImage, StringBuilder stringBuilder) {
         stringBuilder.append("Field [").append(field.getName()).append("]");
         if (null != beforeImage) {
-            stringBuilder.append("Before [").append(fieldConverter.convert(field, beforeImage).toString()).append("]");
+            FieldValue fieldValue = fieldConverter.convert(field, beforeImage);
+            if(fieldValue !=null) {
+                stringBuilder.append("Before [").append(fieldValue.toString()).append("]");
+            }
         }
-        if (null != afterImage) {
-            stringBuilder.append("After [").append(fieldConverter.convert(field, afterImage).toString()).append("]");
+        if (null != afterImage && !(afterImage instanceof com.alibaba.dts.formats.avro.EmptyObject)) {
+            FieldValue fieldValue = fieldConverter.convert(field, afterImage);
+
+            if(fieldValue !=null) {
+                stringBuilder.append("After [").append(fieldValue.toString()).append("]");
+            }
         }
         stringBuilder.append("\n");
     }

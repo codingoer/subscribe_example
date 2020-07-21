@@ -46,6 +46,12 @@ public class OracleFieldConverter implements FieldConverter {
 
     @Override
     public FieldValue convert(Field field, Object o) {
+
+        //oeacle before image field may be empty, return null
+        if (o instanceof com.alibaba.dts.formats.avro.EmptyObject) {
+            return null;
+        }
+
          DataAdapter dataAdapter = DATA_ADAPTERS[field.getDataTypeNumber()];
 
          if(dataAdapter == null) {

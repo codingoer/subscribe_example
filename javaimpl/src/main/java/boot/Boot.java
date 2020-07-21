@@ -128,9 +128,9 @@ public class Boot {
 
     // may check some fo config value
     private static void checkConfig(Properties properties) {
-        require(null != properties.getProperty(USER_NAME), "use should supplied");
-        require(null != properties.getProperty(PASSWORD_NAME), "password should supplied");
-        require(null != properties.getProperty(SID_NAME), "sid should supplied");
+        //require(null != properties.getProperty(USER_NAME), "use should supplied");
+        //require(null != properties.getProperty(PASSWORD_NAME), "password should supplied");
+        //require(null != properties.getProperty(SID_NAME), "sid should supplied");
         require(null != properties.getProperty(KAFKA_TOPIC), "kafka topic should supplied");
         require(null != properties.getProperty(KAFKA_BROKER_URL_NAME), "broker url should supplied");
     }

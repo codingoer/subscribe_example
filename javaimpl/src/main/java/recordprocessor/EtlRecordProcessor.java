@@ -73,6 +73,7 @@ public class EtlRecordProcessor implements  Runnable, Closeable {
                 }
                 fetchFailedCount = 0;
                 final ConsumerRecord<byte[], byte[]> consumerRecord = toProcess;
+                consumerRecord.timestamp();
                 record = fastDeserializer.deserialize(consumerRecord.value());
                 log.debug("EtlRecordProcessor: meet [{}] record type", record.getOperation());
                 for (RecordListener recordListener : recordListeners.values()) {
