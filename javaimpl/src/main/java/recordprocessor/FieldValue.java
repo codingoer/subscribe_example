@@ -27,7 +27,8 @@ public class FieldValue  {
             return "null [binary]";
         }
         if (encoding==null) {
-            return super.toString();
+            //return super.toString();
+            encoding = "ASCII";
         }
         try {
             if(StringUtils.equals("utf8mb4", encoding)){

@@ -1,6 +1,16 @@
+import static boot.Boot.boot;
+import static recordgenerator.Names.GROUP_NAME;
+import static recordgenerator.Names.INITIAL_CHECKPOINT_NAME;
+import static recordgenerator.Names.KAFKA_BROKER_URL_NAME;
+import static recordgenerator.Names.KAFKA_TOPIC;
+import static recordgenerator.Names.PASSWORD_NAME;
+import static recordgenerator.Names.SID_NAME;
+import static recordgenerator.Names.SUBSCRIBE_MODE_NAME;
+import static recordgenerator.Names.USER_NAME;
+import static recordgenerator.Names.USE_CONFIG_CHECKPOINT_NAME;
+
+import common.DefaultRecordListener;
 import common.RecordListener;
-import boot.MysqlRecordPrinter;
-import common.UserRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,25 +18,13 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
 
-import static boot.Boot.boot;
-import static recordgenerator.Names.*;
-
-public class NotifyDemo {
-    private static final Logger log = LoggerFactory.getLogger(NotifyDemo.class);
+public class NotifyDemoDB {
+    private static final Logger log = LoggerFactory.getLogger(NotifyDemoDB.class);
 
     public static Map<String, RecordListener> buildRecordListener() {
-        // user can impl their own listener
-        RecordListener mysqlRecordPrintListener = new RecordListener() {
-            @Override
-            public void consume(UserRecord record) {
-                // consume record
-                // MysqlRecordPrinter show how to go through record fields and get general attributes
-                String ret = MysqlRecordPrinter.recordToString(record.getRecord());
-        //        log.info(ret);
-                record.commit(String.valueOf(record.getRecord().getSourceTimestamp()));
-            }
-        };
-        return Collections.singletonMap("mysqlRecordPrinter", mysqlRecordPrintListener);
+        // user can impl their own listener,value can be mysql, oracle, postgresql
+        RecordListener oracleRecordPrintListener = new DefaultRecordListener("postgresql");
+        return Collections.singletonMap("RecordPrinter", oracleRecordPrintListener);
     }
 
     /**
