@@ -11,7 +11,6 @@ import static recordgenerator.Names.USE_CONFIG_CHECKPOINT_NAME;
 
 import common.DefaultRecordListener;
 import common.RecordListener;
-import common.UserRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,13 +18,13 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
 
-public class NotifyDemoOracle {
-    private static final Logger log = LoggerFactory.getLogger(NotifyDemoOracle.class);
+public class NotifyDemoDB {
+    private static final Logger log = LoggerFactory.getLogger(NotifyDemoDB.class);
 
     public static Map<String, RecordListener> buildRecordListener() {
-        // user can impl their own listener
-        RecordListener oracleRecordPrintListener = new DefaultRecordListener("oracle");
-        return Collections.singletonMap("OracleRecordPrinter", oracleRecordPrintListener);
+        // user can impl their own listener,value can be mysql, oracle, postgresql
+        RecordListener oracleRecordPrintListener = new DefaultRecordListener("postgresql");
+        return Collections.singletonMap("RecordPrinter", oracleRecordPrintListener);
     }
 
     /**
