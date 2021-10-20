@@ -52,10 +52,13 @@ public class RecordGenerator implements Runnable, Closeable {
         this.subscribeMode = parseConsumerSubscribeMode(properties.getProperty(SUBSCRIBE_MODE_NAME, "assign"));
         this.useCheckpointConfig = new AtomicBoolean(StringUtils.equalsIgnoreCase(properties.getProperty(USE_CONFIG_CHECKPOINT_NAME), "true"));
         existed = false;
-        metaStoreCenter.registerStore(LOCAL_FILE_STORE_NAME, new LocalFileMetaStore(LOCAL_FILE_STORE_NAME));
+        metaStoreCenter.registerStore(composeLocalFileStoreName(LOCAL_FILE_STORE_NAME, groupID), new LocalFileMetaStore(LOCAL_FILE_STORE_NAME));
         log.info("RecordGenerator: try time [" + tryTime + "], try backTimeMS [" + tryBackTimeMS + "]");
     }
 
+    private String composeLocalFileStoreName(String prefix, String sid) {
+        return StringUtils.join(prefix, "-", sid);
+    }
 
     private ConsumerWrap getConsumerWrap() {
         return consumerWrapFactory.getConsumerWrap(properties);
@@ -158,7 +161,7 @@ public class RecordGenerator implements Runnable, Closeable {
 
     private Checkpoint getCheckpoint() {
         // use local checkpoint priority
-        Checkpoint checkpoint = metaStoreCenter.seek(LOCAL_FILE_STORE_NAME, topicPartition, groupID);
+        Checkpoint checkpoint = metaStoreCenter.seek(composeLocalFileStoreName(LOCAL_FILE_STORE_NAME, groupID), topicPartition, groupID);
         if (null == checkpoint) {
             checkpoint = metaStoreCenter.seek(KAFKA_STORE_NAME, topicPartition, groupID);
         }
