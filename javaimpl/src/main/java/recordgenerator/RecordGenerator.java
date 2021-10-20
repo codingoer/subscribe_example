@@ -52,7 +52,7 @@ public class RecordGenerator implements Runnable, Closeable {
         this.subscribeMode = parseConsumerSubscribeMode(properties.getProperty(SUBSCRIBE_MODE_NAME, "assign"));
         this.useCheckpointConfig = new AtomicBoolean(StringUtils.equalsIgnoreCase(properties.getProperty(USE_CONFIG_CHECKPOINT_NAME), "true"));
         existed = false;
-        metaStoreCenter.registerStore(composeLocalFileStoreName(LOCAL_FILE_STORE_NAME, groupID), new LocalFileMetaStore(LOCAL_FILE_STORE_NAME));
+        metaStoreCenter.registerStore(composeLocalFileStoreName(LOCAL_FILE_STORE_NAME, groupID), new LocalFileMetaStore(composeLocalFileStoreName(LOCAL_FILE_STORE_NAME, groupID)));
         log.info("RecordGenerator: try time [" + tryTime + "], try backTimeMS [" + tryBackTimeMS + "]");
     }
 
