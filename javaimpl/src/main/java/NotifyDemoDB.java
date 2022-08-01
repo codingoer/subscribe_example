@@ -19,11 +19,12 @@ import java.util.Map;
 import java.util.Properties;
 
 public class NotifyDemoDB {
+
     private static final Logger log = LoggerFactory.getLogger(NotifyDemoDB.class);
 
     public static Map<String, RecordListener> buildRecordListener() {
         // user can impl their own listener,value can be mysql, oracle, postgresql
-        RecordListener oracleRecordPrintListener = new DefaultRecordListener("postgresql");
+        RecordListener oracleRecordPrintListener = new DefaultRecordListener("mysql");
         return Collections.singletonMap("RecordPrinter", oracleRecordPrintListener);
     }
 

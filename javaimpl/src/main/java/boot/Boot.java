@@ -28,6 +28,7 @@ import static recordgenerator.Names.*;
 import static common.Util.*;
 
 public class Boot {
+
     private static final Logger log = LoggerFactory.getLogger(Boot.class);
     private static final AtomicBoolean existed = new AtomicBoolean(false);
 
@@ -43,13 +44,19 @@ public class Boot {
         Context context = getStreamContext(properties);
         // check config
         checkConfig(properties);
+
+        // 获取记录生产者【线程】
         RecordGenerator recordGenerator = getRecordGenerator(context, properties);
+        // 获取记录消费者【线程】
         EtlRecordProcessor etlRecordProcessor = getEtlRecordProcessor(context, properties, recordGenerator);
+        // 消费者注册消费监听
         recordListeners.forEach((k, v) -> {
             log.info("Boot: register record listener " + k);
             etlRecordProcessor.registerRecordListener(k, v);
         });
+        // 注册信号量
         registerSignalHandler(context);
+        // 开启工作线程
         List<WorkThread> startStream = startWorker(etlRecordProcessor, recordGenerator);
 
         while (!existed.get() ) {
@@ -64,8 +71,8 @@ public class Boot {
 
     private static List<WorkThread> startWorker(EtlRecordProcessor etlRecordProcessor, RecordGenerator recordGenerator) {
         List<WorkThread> ret = new LinkedList<>();
-        ret.add(new WorkThread(etlRecordProcessor));
-        ret.add(new WorkThread(recordGenerator));
+        ret.add(new WorkThread(etlRecordProcessor, "Record Processor"));
+        ret.add(new WorkThread(recordGenerator, "Record Generator"));
         for (WorkThread workThread : ret) {
             workThread.start();
         }
@@ -118,6 +125,7 @@ public class Boot {
         EtlRecordProcessor etlRecordProcessor = new EtlRecordProcessor(new OffsetCommitCallBack() {
             @Override
             public void commit(TopicPartition tp, long timestamp, long offset, String metadata) {
+                // 回调之后设置信息消费点位
                 recordGenerator.setToCommitCheckpoint(new Checkpoint(tp, timestamp, offset, metadata));
             }
         }, context);

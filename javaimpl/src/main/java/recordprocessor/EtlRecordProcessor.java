@@ -121,7 +121,7 @@ public class EtlRecordProcessor implements  Runnable, Closeable {
                     commit();
                 }
             }
-        });
+        }, "Record Processor Commit");
         return workThread;
     }
 
