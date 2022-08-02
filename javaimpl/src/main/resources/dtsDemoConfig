@@ -1,0 +1,9 @@
+user=xxxx
+password=xxxx
+sid=dtsxr111111111111
+group=dtsxr111111111111
+kafkaTopic=cn_shanghai_i_xxxxxxxxxx_34001_dba
+broker=dts-cn-shanghai.aliyuncs.com:18001
+checkpoint=1635936098
+useConfigCheckpoint=true
+subscribeMode=subscribe

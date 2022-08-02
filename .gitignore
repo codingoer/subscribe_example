@@ -5,3 +5,4 @@ javaimpl/src/test/java/NotifyDemoYanmen.java
 javaimpl/localCheckpointStore
 
 avro/target
+javaimpl/src/main/resources/dtsConfig
